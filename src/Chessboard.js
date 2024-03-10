@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import Chess from "chess.js";
 
+import { formatBoard } from './api';
+
 import { Chessboard } from "react-chessboard";
 
 const buttonStyle = {
@@ -9,14 +11,6 @@ const buttonStyle = {
     margin: "10px 10px 0px 0px",
     borderRadius: "6px",
     backgroundColor: "#f0d9b5",
-    border: "none",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
-  };
-  
-  const inputStyle = {
-    padding: "10px 20px",
-    margin: "10px 0 10px 0",
-    borderRadius: "6px",
     border: "none",
     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
   };
@@ -34,7 +28,7 @@ const buttonStyle = {
 export const PlayVsRandom = () => {
     const [game, setGame] = useState(new Chess());
     const [currentTimeout, setCurrentTimeout] = useState();
-  
+
     function safeGameMutate(modify) {
       setGame((g) => {
         const update = { ...g };
@@ -49,6 +43,9 @@ export const PlayVsRandom = () => {
       // exit if the game is over
       if (game.game_over() || game.in_draw() || possibleMoves.length === 0)
         return;
+
+      const formattedBoard = formatBoard(game.board());
+
   
       const randomIndex = Math.floor(Math.random() * possibleMoves.length);
       safeGameMutate((game) => {
@@ -67,6 +64,8 @@ export const PlayVsRandom = () => {
   
       // illegal move
       if (move === null) return false;
+
+      console.log('done move', move);
   
       // store timeout so it can be cleared on undo/reset so computer doesn't execute move
       const newTimeout = setTimeout(makeRandomMove, 200);
