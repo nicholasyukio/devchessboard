@@ -27,7 +27,13 @@ const buttonStyle = {
 ///////////////////////////////////
 export const PlayVsRandom = () => {
     const [game, setGame] = useState(new Chess());
+    const [board, setBoard] = useState(null);
     const [currentTimeout, setCurrentTimeout] = useState();
+
+    const handlePieceDragBegin = () => {
+        const board = game.board();
+        setBoard(JSON.parse(JSON.stringify(board)));
+    }
 
     function safeGameMutate(modify) {
       setGame((g) => {
@@ -46,13 +52,13 @@ export const PlayVsRandom = () => {
 
       console.log('possibleMoves', possibleMoves)
 
-      const formattedBoard = formatBoard(game.board());
+      const formattedBoard = formatBoard(board);
       const formattedMove = formatMove(lastMove);
 
-      const response = await getNextMove();
+      const response = await getNextMove(formattedBoard, formattedMove);
       const apiMove = fromMoveToObject(response['AI move']);
 
-      console.log('apiMove', apiMove)
+      console.log('apiMove', apiMove);
 
       safeGameMutate((game) => {
         game.move(apiMove);
@@ -87,6 +93,7 @@ export const PlayVsRandom = () => {
           id="PlayVsRandom"
           position={game.fen()}
           onPieceDrop={onDrop}
+          onPieceDragBegin={handlePieceDragBegin}
           customBoardStyle={{
             borderRadius: "4px",
             boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
