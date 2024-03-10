@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import Chess from "chess.js";
 
-import { formatBoard } from './api';
+import { formatBoard, formatMove, getNextMove } from './api';
 
 import { Chessboard } from "react-chessboard";
 
@@ -37,7 +37,7 @@ export const PlayVsRandom = () => {
       });
     }
   
-    function makeRandomMove() {
+    async function makeNextMove(lastMove) {
       const possibleMoves = game.moves();
   
       // exit if the game is over
@@ -45,7 +45,11 @@ export const PlayVsRandom = () => {
         return;
 
       const formattedBoard = formatBoard(game.board());
+      const formattedMove = formatMove(lastMove);
 
+      const response = await getNextMove();
+
+      console.log('response', response)
   
       const randomIndex = Math.floor(Math.random() * possibleMoves.length);
       safeGameMutate((game) => {
@@ -68,7 +72,9 @@ export const PlayVsRandom = () => {
       console.log('done move', move);
   
       // store timeout so it can be cleared on undo/reset so computer doesn't execute move
-      const newTimeout = setTimeout(makeRandomMove, 200);
+      const newTimeout = setTimeout(() => {
+        makeNextMove(move)
+      }, 200);
       setCurrentTimeout(newTimeout);
       return true;
     }
