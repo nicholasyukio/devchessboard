@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Chess from "chess.js";
 
-import { formatBoard, formatMove, getNextMove } from './api';
+import { formatBoard, formatMove, getNextMove, fromMoveToObject } from './api';
 
 import { Chessboard } from "react-chessboard";
 
@@ -44,16 +44,18 @@ export const PlayVsRandom = () => {
       if (game.game_over() || game.in_draw() || possibleMoves.length === 0)
         return;
 
+      console.log('possibleMoves', possibleMoves)
+
       const formattedBoard = formatBoard(game.board());
       const formattedMove = formatMove(lastMove);
 
       const response = await getNextMove();
+      const apiMove = fromMoveToObject(response['AI move']);
 
-      console.log('response', response)
-  
-      const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+      console.log('apiMove', apiMove)
+
       safeGameMutate((game) => {
-        game.move(possibleMoves[randomIndex]);
+        game.move(apiMove);
       });
     }
   
