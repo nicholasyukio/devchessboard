@@ -5,16 +5,6 @@ import { formatBoard, formatMove, getNextMove, fromMoveToObject } from './api';
 
 import { Chessboard } from "react-chessboard";
 
-const buttonStyle = {
-    cursor: "pointer",
-    padding: "10px 20px",
-    margin: "10px 10px 0px 0px",
-    borderRadius: "6px",
-    backgroundColor: "#f0d9b5",
-    border: "none",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
-  };
-  
   const boardWrapper = {
     width: `70vw`,
     maxWidth: "70vh",
@@ -28,7 +18,6 @@ const buttonStyle = {
 export const PlayVsRandom = () => {
     const [game, setGame] = useState(new Chess());
     const [board, setBoard] = useState(null);
-    const [currentTimeout, setCurrentTimeout] = useState();
     const [isLoading, setIsLoading] = useState(0)
 
     const handlePieceDragBegin = () => {
@@ -78,16 +67,12 @@ export const PlayVsRandom = () => {
       // illegal move
       if (move === null) return false;
 
-      console.log('done move', move);
-  
-      // store timeout so it can be cleared on undo/reset so computer doesn't execute move
-      const newTimeout = setTimeout(() => {
+      setTimeout(() => {
         setIsLoading(true);
         makeNextMove(move).then(() => {
           setIsLoading(false);
         })
       }, 200);
-      setCurrentTimeout(newTimeout);
       return true;
     }
   
@@ -104,28 +89,6 @@ export const PlayVsRandom = () => {
           }}
         />
         {Boolean(isLoading) && 'Loading...'}
-        <button
-          style={buttonStyle}
-          onClick={() => {
-            safeGameMutate((game) => {
-              game.reset();
-            });
-            clearTimeout(currentTimeout);
-          }}
-        >
-          reset
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => {
-            safeGameMutate((game) => {
-              game.undo();
-            });
-            clearTimeout(currentTimeout);
-          }}
-        >
-          undo
-        </button>
       </div>
     );
   };
