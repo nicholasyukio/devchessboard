@@ -29,6 +29,7 @@ export const PlayVsRandom = () => {
     const [game, setGame] = useState(new Chess());
     const [board, setBoard] = useState(null);
     const [currentTimeout, setCurrentTimeout] = useState();
+    const [isLoading, setIsLoading] = useState(0)
 
     const handlePieceDragBegin = () => {
         const board = game.board();
@@ -81,7 +82,10 @@ export const PlayVsRandom = () => {
   
       // store timeout so it can be cleared on undo/reset so computer doesn't execute move
       const newTimeout = setTimeout(() => {
-        makeNextMove(move)
+        setIsLoading(true);
+        makeNextMove(move).then(() => {
+          setIsLoading(false);
+        })
       }, 200);
       setCurrentTimeout(newTimeout);
       return true;
@@ -99,6 +103,7 @@ export const PlayVsRandom = () => {
             boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
           }}
         />
+        {Boolean(isLoading) && 'Loading...'}
         <button
           style={buttonStyle}
           onClick={() => {

@@ -13,7 +13,9 @@ export const getNextMove = (board, move) => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(payload)
-      }).then(response => response.json());
+      })
+      .then(response => response.json())
+      .catch(() => { console.log('Next move failed!'); });
 }
 
 export const getCoordinates = (point) => {
