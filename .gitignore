@@ -36,3 +36,5 @@ typings/
 .yarn-integrity
 
 notes.md
+
+build/
