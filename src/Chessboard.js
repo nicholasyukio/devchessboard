@@ -11,6 +11,10 @@ import { Chessboard } from "react-chessboard";
     margin: "3rem auto",
   };
 
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
 
   ///////////////////////////////////
 ////////// PlayVsRandom ///////////
@@ -19,6 +23,8 @@ export const PlayVsRandom = () => {
     const [game, setGame] = useState(new Chess());
     const [board, setBoard] = useState(null);
     const [isLoading, setIsLoading] = useState(0)
+
+    const [gameId, setGameId] = useState(getRandomInt(100000));
 
     const handlePieceDragBegin = () => {
         const board = game.board();
@@ -45,7 +51,7 @@ export const PlayVsRandom = () => {
       const formattedBoard = formatBoard(board);
       const formattedMove = formatMove(lastMove);
 
-      const response = await getNextMove(formattedBoard, formattedMove);
+      const response = await getNextMove(formattedBoard, formattedMove, gameId);
       const apiMove = fromMoveToObject(response['AI move']);
 
       console.log('apiMove', apiMove);
