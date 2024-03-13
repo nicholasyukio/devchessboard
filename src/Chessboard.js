@@ -24,7 +24,7 @@ export const PlayVsRandom = () => {
     const [board, setBoard] = useState(null);
     const [isLoading, setIsLoading] = useState(0)
 
-    const [gameId, setGameId] = useState(getRandomInt(100000));
+    const [gameId, setGameId] = useState(String(getRandomInt(100000)));
 
     const handlePieceDragBegin = () => {
         const board = game.board();
@@ -45,8 +45,6 @@ export const PlayVsRandom = () => {
       // exit if the game is over
       if (game.game_over() || game.in_draw() || possibleMoves.length === 0)
         return;
-
-      console.log('possibleMoves', possibleMoves)
 
       const formattedBoard = formatBoard(board);
       const formattedMove = formatMove(lastMove);
