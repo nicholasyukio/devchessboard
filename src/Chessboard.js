@@ -5,15 +5,15 @@ import { formatBoard, formatMove, getNextMove, fromMoveToObject } from './api';
 
 import { Chessboard } from "react-chessboard";
 
-  const boardWrapper = {
-    width: `70vw`,
-    maxWidth: "70vh",
-    margin: "3rem auto",
-  };
+const boardWrapper = {
+  width: `70vw`,
+  maxWidth: "70vh",
+  margin: "3rem auto",
+};
 
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 
   ///////////////////////////////////
@@ -49,13 +49,11 @@ export const PlayVsRandom = () => {
       const formattedBoard = formatBoard(board);
       const formattedMove = formatMove(lastMove);
 
-      const response = await getNextMove(formattedBoard, formattedMove, gameId);
-      const apiMove = fromMoveToObject(response['AI move']);
-
-      console.log('apiMove', apiMove);
-
-      safeGameMutate((game) => {
-        game.move(apiMove);
+      return getNextMove(formattedBoard, formattedMove, gameId).then((response) => {
+        const apiMove = fromMoveToObject(response['AI move']);
+        safeGameMutate((game) => {
+          game.move(apiMove);
+        });
       });
     }
   
@@ -73,9 +71,17 @@ export const PlayVsRandom = () => {
 
       setTimeout(() => {
         setIsLoading(true);
-        makeNextMove(move).then(() => {
-          setIsLoading(false);
-        })
+        makeNextMove(move)
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(() => {
+            setIsLoading(false);
+            alert('API call failed, try again later');
+            safeGameMutate((game) => {
+              game.undo();
+            });
+          });
       }, 200);
       return true;
     }

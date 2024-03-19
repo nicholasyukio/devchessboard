@@ -12,10 +12,10 @@ export const getNextMove = (board, move, gameId) => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(10000),
       })
       .then(response => response.json())
-      .catch(() => { console.log('Next move failed!'); });
 }
 
 export const getCoordinates = (point) => {
