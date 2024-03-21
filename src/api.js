@@ -1,4 +1,4 @@
-const API_URL = 'http://18.189.57.69/play/'
+const API_URL = 'http://127.0.0.1:8000/play/'
 
 export const getNextMove = (board, move, gameId) => {
     const payload = {

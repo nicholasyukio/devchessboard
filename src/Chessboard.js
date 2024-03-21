@@ -5,6 +5,8 @@ import { formatBoard, formatMove, getNextMove, fromMoveToObject } from './api';
 
 import { Chessboard } from "react-chessboard";
 
+let moveHistory = [[0, 1, 2, 2], [2, 3, 4, 5]];
+
 const boardWrapper = {
   width: `70vw`,
   maxWidth: "70vh",
@@ -13,6 +15,25 @@ const boardWrapper = {
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
+}
+
+export const GameHistory = () => {
+    return (
+      <div>
+        <p>Game History: </p>
+        {moveHistory.map((move, index) => (
+          <div key={index}>
+            {move.map((element, innerIndex) => (
+              <span key={innerIndex}>
+                {element}
+                {innerIndex !== move.length - 1 && ", "} {/* Add comma if it's not the last element */}
+              </span>
+            ))}
+            <br /> {/* Add line break after each move */}
+          </div>
+        ))}
+      </div>
+    );
 }
 
 
@@ -48,6 +69,7 @@ export const PlayVsRandom = () => {
 
       const formattedBoard = formatBoard(board);
       const formattedMove = formatMove(lastMove);
+      moveHistory.push(formattedMove);
 
       return getNextMove(formattedBoard, formattedMove, gameId).then((response) => {
         const apiMove = fromMoveToObject(response['AI move']);

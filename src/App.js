@@ -1,11 +1,11 @@
 import './App.css';
-import { PlayVsRandom } from './Chessboard'
+import { GameHistory, PlayVsRandom } from './Chessboard'
 
 function App() {
   return (
     <div>
-      My Chess AI App
-
+      Dev Chessboard
+      <GameHistory />
       <PlayVsRandom />
     </div>
   );
